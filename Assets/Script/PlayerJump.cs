@@ -1,27 +1,43 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace JumpControl.Core
 {    
     public class PlayerJump : MonoBehaviour
     {
+        [SerializeField] UnityEvent GameOverEvent;
+        
         [SerializeField] private Slider jumpSlider;
         [SerializeField] private float jumpForce;
         [SerializeField] private float xVelocity,yVelocity;
 
+        [SerializeField] private Sprite jumpStartSprite,jumpEndSprite;
+        
         private Rigidbody2D myRd;
         private Coroutine jumpManager=null;
         private bool isGround=false;
-
         private float jumpX=0,jumpY=0;
 
+        private bool isGameOver=false;
         // Start is called before the first frame update
         void Start()
         {
             myRd=GetComponent<Rigidbody2D>();               
         }       
+
+        private void Update()
+        {
+            if (transform.position.y<=-14 && !isGameOver)
+            {
+                // Debug.Log("id death");
+                isGameOver=true;
+                Time.timeScale=0f;                
+                GameOverEvent?.Invoke();
+            }
+        }
 
         public void StopPlayerJump()
         {

@@ -2,21 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Platfrom : MonoBehaviour
-{        
-    PlatfromGenerator platfromGenerator=null;
-    private void Start()
-    {
-        platfromGenerator=FindObjectOfType<PlatfromGenerator>();
-    }
-
-    private void OnCollisionExit2D(Collision2D other)
+namespace JumpControl.Core
+{    
+    public class Platfrom : MonoBehaviour
     {        
-        Debug.Log(other.gameObject.name);
-    }
+        PlatfromGenerator platfromGenerator=null;        
 
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        platfromGenerator.GeneratePlatfrom(this.transform.position);        
+        [SerializeField] private float offset;
+
+        private void Start()
+        {
+            platfromGenerator=FindObjectOfType<PlatfromGenerator>();            
+            // Debug.Log("start"+name);
+        }
+        private void OnCollisionEnter2D(Collision2D other)
+        {                                     
+            platfromGenerator.GeneratePlatfrom(this.transform.position);                    
+        }
+
+        private void Update()
+        {
+            if (transform.position.x+offset < Camera.main.transform.position.x)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 }
